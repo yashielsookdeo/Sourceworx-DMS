@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Sourceworx.DMS.NativeApp.Pages.CameraCapturePage"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="CameraCapturePage">
+
+
+    <VerticalStackLayout Padding="20" Spacing="20">
+
+        <Button Text="📷 Capture Image" 
+                Clicked="OnCaptureImageClicked"
+                BackgroundColor="DarkBlue"
+                TextColor="White" />
+
+        <CollectionView x:Name="ImagePreviewList"
+                        ItemsSource="{Binding CapturedImages}"
+                        HeightRequest="300">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Image Source="{Binding}" HeightRequest="100" Aspect="AspectFill" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Text="📄 Generate PDF"
+                Clicked="OnGeneratePdfClicked"
+                BackgroundColor="DarkGreen"
+                TextColor="White"
+                IsEnabled="{Binding HasImages}" />
+
+    </VerticalStackLayout>
+</ContentPage>

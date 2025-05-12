@@ -1,0 +1,156 @@
+{
+    "Projects": [
+      {
+        "Name": "CASE # 20250913/0045",
+        "Description": "On September 13, 2025, a case was opened ....",
+        "Icon": "\uea28",
+        "Category": {
+          "Title": "Allocated",
+          "Color": "#3068df"
+        },
+        "Tags": [
+          {
+            "Title": "Allocated",
+            "Color": "#3068df"
+          }
+        ],
+        "Tasks": [
+          {
+            "Title": "Summons",
+            "IsCompleted": false
+          },
+          {
+            "Title": "Medical Records",
+            "IsCompleted": false
+          },
+          {
+            "Title": "Letter of Demands",
+            "IsCompleted": false
+          },
+          {
+            "Title": "Adverse Event",
+            "IsCompleted": false
+          },
+          {
+            "Title": "PAIA",
+            "IsCompleted": false
+          }
+        ]
+      },
+      {
+        "Name": "CASE # 20240901/7895",
+        "Description": "On December 13, 2025, a case was opened ....",
+        "Icon": "\uf8fe",
+        "Category": {
+          "Title": "Scanned",
+          "Color": "#8800FF"
+        },
+        "Tags": [
+          {
+            "Title": "personal",
+            "Color": "#FF4500"
+          }
+        ],
+        "Tasks": [
+          {
+            "Title": "Summons",
+            "IsCompleted": false
+          },
+          {
+            "Title": "Medical Records",
+            "IsCompleted": false
+          },
+          {
+            "Title": "Letter of Demands",
+            "IsCompleted": false
+          },
+          {
+            "Title": "Adverse Event",
+            "IsCompleted": false
+          },
+          {
+            "Title": "PAIA",
+            "IsCompleted": false
+          }
+        ]
+      },
+      {
+        "Name": "CASE # 20260913/3895",
+        "Description": "On January 25, 2001, a case was opened at Maxheke ....",
+        "Icon": "\uf837",
+        "Category": {
+          "Title": "Outstanding",
+          "Color": "#FF3300"
+        },
+        "Tags": [
+          {
+            "Title": "health",
+            "Color": "#32CD32"
+          }
+        ],
+        "Tasks": [
+          {
+            "Title": "Summons",
+            "IsCompleted": false
+          },
+          {
+            "Title": "Medical Records",
+            "IsCompleted": false
+          },
+          {
+            "Title": "Letter of Demands",
+            "IsCompleted": false
+          },
+          {
+            "Title": "Adverse Event",
+            "IsCompleted": false
+          },
+          {
+            "Title": "PAIA",
+            "IsCompleted": false
+          }
+        ]
+      },
+      {
+        "Name": "CASE # 20260913/3895",
+        "Description": "On January 25, 2001, a case was opened at Genral Hospital ....",
+        "Icon": "\uf5a9",
+        "Category": {
+          "Title": "Scanned Documents",
+          "Color": "#FF9900"
+        },
+        "Tags": [
+          {
+            "Title": "family",
+            "Color": "#1E90FF"
+          },
+          {
+            "Title": "friends",
+            "Color": "#FF69B4"
+          }
+        ],
+        "Tasks": [
+          {
+            "Title": "Summons",
+            "IsCompleted": false
+          },
+          {
+            "Title": "Medical Records",
+            "IsCompleted": false
+          },
+          {
+            "Title": "Letter of Demands",
+            "IsCompleted": false
+          },
+          {
+            "Title": "Adverse Event",
+            "IsCompleted": false
+          },
+          {
+            "Title": "PAIA",
+            "IsCompleted": false
+          }
+        ]
+      }
+    ]
+}
