@@ -3,31 +3,77 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Sourceworx.DMS.NativeApp.Pages.CameraCapturePage"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             Title="CameraCapturePage">
+             Title="Scan Document">
 
+    <Grid>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <Label Text="Capture Document Images"
+                   FontSize="Large"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,10" />
 
-    <VerticalStackLayout Padding="20" Spacing="20">
+            <Label Text="Take photos of your document pages. When finished, click 'Generate PDF' to create a PDF document."
+                   FontSize="Small"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   Margin="0,0,0,10" />
 
-        <Button Text="📷 Capture Image" 
-                Clicked="OnCaptureImageClicked"
-                BackgroundColor="DarkBlue"
-                TextColor="White" />
+            <Button Text="📷 Capture Image"
+                    Clicked="OnCaptureImageClicked"
+                    BackgroundColor="DarkBlue"
+                    TextColor="White"
+                    HeightRequest="50"
+                    FontSize="Medium" />
 
-        <CollectionView x:Name="ImagePreviewList"
-                        ItemsSource="{Binding CapturedImages}"
-                        HeightRequest="300">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Image Source="{Binding}" HeightRequest="100" Aspect="AspectFill" />
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+            <Frame BorderColor="LightGray"
+                   Padding="10"
+                   Margin="0,10,0,10"
+                   HeightRequest="300"
+                   CornerRadius="10">
+                <CollectionView x:Name="ImagePreviewList"
+                                ItemsSource="{Binding CapturedImages}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="5">
+                                <Frame BorderColor="Gray"
+                                       CornerRadius="5"
+                                       Padding="5"
+                                       Margin="5">
+                                    <Image Source="{Binding}"
+                                           HeightRequest="150"
+                                           Aspect="AspectFit" />
+                                </Frame>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.EmptyView>
+                        <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                            <Label Text="No images captured yet"
+                                   TextColor="Gray"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Click 'Capture Image' to take a photo"
+                                   TextColor="Gray"
+                                   HorizontalOptions="Center" />
+                        </StackLayout>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+            </Frame>
 
-        <Button Text="📄 Generate PDF"
-                Clicked="OnGeneratePdfClicked"
-                BackgroundColor="DarkGreen"
-                TextColor="White"
-                IsEnabled="{Binding HasImages}" />
+            <Button Text="📄 Generate PDF"
+                    Clicked="OnGeneratePdfClicked"
+                    BackgroundColor="DarkGreen"
+                    TextColor="White"
+                    IsEnabled="{Binding HasImages}"
+                    HeightRequest="50"
+                    FontSize="Medium" />
 
-    </VerticalStackLayout>
+            <Button Text="Cancel"
+                    Clicked="OnCancelClicked"
+                    BackgroundColor="Gray"
+                    TextColor="White"
+                    HeightRequest="50"
+                    FontSize="Medium"
+                    Margin="0,10,0,0" />
+        </VerticalStackLayout>
+    </Grid>
 </ContentPage>

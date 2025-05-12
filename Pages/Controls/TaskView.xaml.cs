@@ -6,12 +6,9 @@ namespace Sourceworx.DMS.NativeApp.Pages.Controls
 {
     public partial class TaskView
     {
-        private readonly DocumentScanner _documentScanner;
-
         public TaskView()
         {
             InitializeComponent();
-            _documentScanner = ServiceHelper.GetService<DocumentScanner>();
         }
 
         public static readonly BindableProperty TaskCompletedCommandProperty = BindableProperty.Create(
@@ -50,8 +47,8 @@ namespace Sourceworx.DMS.NativeApp.Pages.Controls
                 {
                     try
                     {
-                        // Launch the document scanner
-                        string documentPath = await _documentScanner.ScanDocumentAsync();
+                        // Launch the document scanner using the static method
+                        string documentPath = await DocumentScanner.ScanDocumentAsync();
 
                         if (!string.IsNullOrEmpty(documentPath))
                         {

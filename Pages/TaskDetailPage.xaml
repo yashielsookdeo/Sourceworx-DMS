@@ -15,38 +15,62 @@
             Order="Primary"
             Priority="0"
             IconImageSource="{StaticResource IconDelete}" />
-    </ContentPage.ToolbarItems>        
+    </ContentPage.ToolbarItems>
 
     <Grid>
         <ScrollView>
             <VerticalStackLayout Spacing="{StaticResource LayoutSpacing}" Padding="{StaticResource LayoutPadding}">
-                <sf:SfTextInputLayout 
+                <sf:SfTextInputLayout
                     Hint="Task">
                     <Entry
                         Text="{Binding Title}" />
                 </sf:SfTextInputLayout>
 
-                <sf:SfTextInputLayout 
+                <sf:SfTextInputLayout
                     Hint="Completed">
                     <CheckBox
                         HorizontalOptions="End"
                         IsChecked="{Binding IsCompleted}" />
                 </sf:SfTextInputLayout>
 
-                <sf:SfTextInputLayout 
-                    IsVisible="{Binding IsExistingProject}" 
+                <sf:SfTextInputLayout
+                    IsVisible="{Binding IsExistingProject}"
                     Hint="Project">
-                    <Picker 
+                    <Picker
                         ItemsSource="{Binding Projects}"
                         ItemDisplayBinding="{Binding Name, x:DataType=models:Project}"
                         SelectedItem="{Binding Project}"
                         SelectedIndex="{Binding SelectedProjectIndex}" />
                 </sf:SfTextInputLayout>
 
-                <Button 
+                <Button
                     HeightRequest="{OnIdiom 44, Desktop=60}"
                     Text="Save"
                     Command="{Binding SaveCommand}"/>
+
+                <Button
+                    HeightRequest="{OnIdiom 44, Desktop=60}"
+                    Text="Scan Document"
+                    Command="{Binding ScanDocumentCommand}"
+                    IsEnabled="{Binding CanScanDocument}"/>
+
+                <StackLayout IsVisible="{Binding HasDocuments}">
+                    <Label Text="Documents" FontSize="Medium" FontAttributes="Bold" Margin="0,10,0,5"/>
+                    <CollectionView ItemsSource="{Binding Documents}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Margin="0,5" Padding="10" BorderColor="LightGray">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding FileName}" VerticalOptions="Center" HorizontalOptions="StartAndExpand"/>
+                                        <Button Text="View" Command="{Binding Source={RelativeSource AncestorType={x:Type pageModel:TaskDetailPageModel}}, Path=ViewDocumentCommand}"
+                                                CommandParameter="{Binding FilePath}"
+                                                HorizontalOptions="End"/>
+                                    </StackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

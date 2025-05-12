@@ -2,7 +2,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Sourceworx.DMS.NativeApp.Data;
 using Sourceworx.DMS.NativeApp.Models;
+using Sourceworx.DMS.NativeApp.Pages;
 using Sourceworx.DMS.NativeApp.Services;
+using System.Collections.ObjectModel;
 
 namespace Sourceworx.DMS.NativeApp.PageModels
 {
@@ -30,11 +32,22 @@ namespace Sourceworx.DMS.NativeApp.PageModels
         [ObservableProperty]
         private int _selectedProjectIndex = -1;
 
-
         [ObservableProperty]
         private bool _isExistingProject;
 
-        public TaskDetailPageModel(ProjectRepository projectRepository, TaskRepository taskRepository, ModalErrorHandler errorHandler)
+        [ObservableProperty]
+        private ObservableCollection<DocumentModel> _documents = new();
+
+        [ObservableProperty]
+        private bool _hasDocuments;
+
+        [ObservableProperty]
+        private bool _canScanDocument;
+
+        public TaskDetailPageModel(
+            ProjectRepository projectRepository,
+            TaskRepository taskRepository,
+            ModalErrorHandler errorHandler)
         {
             _projectRepository = projectRepository;
             _taskRepository = taskRepository;
@@ -98,6 +111,10 @@ namespace Sourceworx.DMS.NativeApp.PageModels
                 Title = _task.Title;
                 IsCompleted = _task.IsCompleted;
                 CanDelete = true;
+                CanScanDocument = true;
+
+                // Load documents for this task
+                await LoadDocumentsAsync(taskId);
             }
             else
             {
@@ -105,6 +122,78 @@ namespace Sourceworx.DMS.NativeApp.PageModels
                 {
                     ProjectID = Project?.ID ?? 0
                 };
+                CanScanDocument = false;
+            }
+        }
+
+        private async Task LoadDocumentsAsync(int taskId)
+        {
+            try
+            {
+                Documents.Clear();
+
+                var documents = DocumentScanner.GetDocumentsForTask(taskId);
+
+                foreach (var document in documents)
+                {
+                    Documents.Add(new DocumentModel(document));
+                }
+
+                HasDocuments = Documents.Count > 0;
+            }
+            catch (Exception ex)
+            {
+                _errorHandler.HandleError(ex);
+            }
+        }
+
+        [RelayCommand]
+        private async Task ScanDocument()
+        {
+            if (_task?.ID <= 0)
+            {
+                await AppShell.DisplayToastAsync("Please save the task before scanning documents.");
+                return;
+            }
+
+            try
+            {
+                // Navigate to the CameraCapturePage with the task ID
+                var cameraPage = new CameraCapturePage(_task.ID);
+                await Shell.Current.Navigation.PushModalAsync(cameraPage);
+
+                // Wait a bit to ensure the modal is fully closed before reloading documents
+                await Task.Delay(500);
+
+                // Reload documents when returning from the camera page
+                await LoadDocumentsAsync(_task.ID);
+            }
+            catch (Exception ex)
+            {
+                _errorHandler.HandleError(ex);
+            }
+        }
+
+        [RelayCommand]
+        private async Task ViewDocument(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+            {
+                await AppShell.DisplayToastAsync("Document not found.");
+                return;
+            }
+
+            try
+            {
+                await Launcher.OpenAsync(new OpenFileRequest
+                {
+                    File = new ReadOnlyFile(filePath)
+                });
+            }
+            catch (Exception ex)
+            {
+                _errorHandler.HandleError(ex);
+                await AppShell.DisplayToastAsync("Could not open the document.");
             }
         }
 

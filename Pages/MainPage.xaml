@@ -36,7 +36,7 @@
                 <ScrollView>
                     <VerticalStackLayout Spacing="{StaticResource LayoutSpacing}" Padding="{StaticResource LayoutPadding}">
                         <controls:CategoryChart />
-                        <Label Text="All Projects" Style="{StaticResource Title2}"/>
+                        <Label Text="Case Documents Assigned" Style="{StaticResource Title2}"/>
                         <VerticalStackLayout
                             BindableLayout.ItemsSource="{Binding Projects}"
                             Spacing="{StaticResource LayoutSpacing}">
