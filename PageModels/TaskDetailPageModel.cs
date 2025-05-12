@@ -126,7 +126,7 @@ namespace Sourceworx.DMS.NativeApp.PageModels
             }
         }
 
-        private async Task LoadDocumentsAsync(int taskId)
+        private Task LoadDocumentsAsync(int taskId)
         {
             try
             {
@@ -145,6 +145,8 @@ namespace Sourceworx.DMS.NativeApp.PageModels
             {
                 _errorHandler.HandleError(ex);
             }
+
+            return Task.CompletedTask;
         }
 
         [RelayCommand]

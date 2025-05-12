@@ -54,23 +54,24 @@
                     Command="{Binding ScanDocumentCommand}"
                     IsEnabled="{Binding CanScanDocument}"/>
 
-                <StackLayout IsVisible="{Binding HasDocuments}">
+                <VerticalStackLayout IsVisible="{Binding HasDocuments}">
                     <Label Text="Documents" FontSize="Medium" FontAttributes="Bold" Margin="0,10,0,5"/>
-                    <CollectionView ItemsSource="{Binding Documents}">
+                    <CollectionView ItemsSource="{Binding Documents}" x:DataType="pageModel:TaskDetailPageModel">
                         <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Frame Margin="0,5" Padding="10" BorderColor="LightGray">
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label Text="{Binding FileName}" VerticalOptions="Center" HorizontalOptions="StartAndExpand"/>
+                            <DataTemplate x:DataType="models:DocumentModel">
+                                <Border Margin="0,5" Padding="10" Stroke="LightGray" StrokeThickness="1" StrokeShape="RoundRectangle 5">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Text="{Binding FileName}" VerticalOptions="Center" Grid.Column="0"/>
                                         <Button Text="View" Command="{Binding Source={RelativeSource AncestorType={x:Type pageModel:TaskDetailPageModel}}, Path=ViewDocumentCommand}"
                                                 CommandParameter="{Binding FilePath}"
-                                                HorizontalOptions="End"/>
-                                    </StackLayout>
-                                </Frame>
+                                                HorizontalOptions="End"
+                                                Grid.Column="1"/>
+                                    </Grid>
+                                </Border>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                </StackLayout>
+                </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

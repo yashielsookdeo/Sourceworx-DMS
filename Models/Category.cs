@@ -17,6 +17,15 @@ namespace Sourceworx.DMS.NativeApp.Models
             }
         }
 
+        [JsonIgnore]
+        public Color DisplayColor
+        {
+            get
+            {
+                return Microsoft.Maui.Graphics.Color.FromArgb(Color);
+            }
+        }
+
         public override string ToString() => $"{Title}";
     }
 }
