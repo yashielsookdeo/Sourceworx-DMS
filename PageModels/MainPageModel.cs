@@ -35,6 +35,21 @@ namespace Sourceworx.DMS.NativeApp.PageModels
         [ObservableProperty]
         private string _today = DateTime.Now.ToString("dddd, MMM d");
 
+        [ObservableProperty]
+        private string _userName = "Zanele";
+
+        [ObservableProperty]
+        private int _warningCount = 1;
+
+        [ObservableProperty]
+        private int _completedTaskCount = 2;
+
+        [ObservableProperty]
+        private int _notificationCount = 4;
+
+        [ObservableProperty]
+        private List<ProjectTask> _newTasks = [];
+
         public bool HasCompletedTasks
             => Tasks?.Any(t => t.IsCompleted) ?? false;
 
@@ -74,6 +89,16 @@ namespace Sourceworx.DMS.NativeApp.PageModels
                 TodoCategoryColors = chartColors;
 
                 Tasks = await _taskRepository.ListAsync();
+
+                // Set up dashboard data
+                CompletedTaskCount = Tasks.Count(t => t.IsCompleted);
+
+                // Filter new tasks (for demo purposes, we'll just take the first 2 tasks)
+                NewTasks = Tasks.Take(2).ToList();
+
+                // These would normally be populated from a notification service
+                WarningCount = 1;
+                NotificationCount = 4;
             }
             finally
             {
@@ -169,6 +194,37 @@ namespace Sourceworx.DMS.NativeApp.PageModels
             OnPropertyChanged(nameof(HasCompletedTasks));
             Tasks = new(Tasks);
             await AppShell.DisplayToastAsync("All cleaned up!");
+        }
+
+        [RelayCommand]
+        private async Task ManageProfile()
+        {
+            await AppShell.DisplayToastAsync("Manage Profile feature coming soon!");
+        }
+
+        [RelayCommand]
+        private async Task ViewStats()
+        {
+            await AppShell.DisplayToastAsync("View Stats feature coming soon!");
+        }
+
+        [RelayCommand]
+        private async Task ViewMyTasks()
+        {
+            await AppShell.DisplayToastAsync("My Tasks feature coming soon!");
+        }
+
+        [RelayCommand]
+        private async Task AcceptTask(ProjectTask task)
+        {
+            if (task != null)
+            {
+                await AppShell.DisplayToastAsync($"Task {task.Title} accepted!");
+            }
+            else
+            {
+                await AppShell.DisplayToastAsync("Task accepted!");
+            }
         }
     }
 }
