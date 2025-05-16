@@ -230,8 +230,8 @@
                             </Border.GestureRecognizers>
                         </Border>
 
-                        <!-- New Tasks Section -->
-                        <Label Text="New Tasks" Style="{StaticResource Title2}" Margin="0,10,0,10" />
+                        <!-- Case Documents Assigned Section -->
+                        <Label Text="Case Documents Assigned" Style="{StaticResource Title2}" Margin="0,10,0,10" />
 
                         <!-- Task Cards -->
                         <VerticalStackLayout Spacing="10">
@@ -282,7 +282,8 @@
                                             TextColor="White"
                                             CornerRadius="10"
                                             Margin="0,10,0,0"
-                                            Command="{Binding AcceptTaskCommand}" />
+                                            Command="{Binding AcceptTaskCommand}"
+                                            CommandParameter="{x:Null}" />
                                 </VerticalStackLayout>
                             </Border>
 
@@ -300,6 +301,13 @@
                                                Text="Charlotte Maxeke Hospital"
                                                VerticalOptions="Center" />
                                     </Grid>
+                                    <Button Text="Accept Task"
+                                            BackgroundColor="#4285F4"
+                                            TextColor="White"
+                                            CornerRadius="10"
+                                            Margin="0,10,0,0"
+                                            Command="{Binding AcceptTaskCommand}"
+                                            CommandParameter="{x:Null}" />
                                 </VerticalStackLayout>
                             </Border>
                         </VerticalStackLayout>
