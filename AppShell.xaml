@@ -15,7 +15,7 @@
         Route="main" />
 
     <ShellContent
-        Title="Projects"
+        Title="Case Documents"
         Icon="{StaticResource IconProjects}"
         ContentTemplate="{DataTemplate pages:ProjectListPage}"
         Route="projects" />
@@ -24,8 +24,8 @@
         Title="Manage Meta"
         Icon="{StaticResource IconMeta}"
         ContentTemplate="{DataTemplate pages:ManageMetaPage}"
-        Route="manage" />  
-    
+        Route="manage" />
+
     <ShellContent
         Title="Capture Image"
         Icon="{StaticResource IconMeta}"
@@ -34,7 +34,7 @@
 
     <Shell.FlyoutFooter>
         <Grid Padding="15">
-            <sf:SfSegmentedControl x:Name="ThemeSegmentedControl" 
+            <sf:SfSegmentedControl x:Name="ThemeSegmentedControl"
                 VerticalOptions="Center" HorizontalOptions="Center" SelectionChanged="SfSegmentedControl_SelectionChanged"
                 SegmentWidth="40" SegmentHeight="40">
                 <sf:SfSegmentedControl.ItemsSource>

@@ -6,7 +6,7 @@
              xmlns:models="clr-namespace:Sourceworx.DMS.NativeApp.Models"
              x:DataType="pageModel:TaskDetailPageModel"
              x:Class="Sourceworx.DMS.NativeApp.Pages.TaskDetailPage"
-             Title="Task">
+             Title="Document">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem
@@ -21,7 +21,7 @@
         <ScrollView>
             <VerticalStackLayout Spacing="{StaticResource LayoutSpacing}" Padding="{StaticResource LayoutPadding}">
                 <sf:SfTextInputLayout
-                    Hint="Task">
+                    Hint="Document Title">
                     <Entry
                         Text="{Binding Title}" />
                 </sf:SfTextInputLayout>
@@ -35,7 +35,7 @@
 
                 <sf:SfTextInputLayout
                     IsVisible="{Binding IsExistingProject}"
-                    Hint="Project">
+                    Hint="Case">
                     <Picker
                         ItemsSource="{Binding Projects}"
                         ItemDisplayBinding="{Binding Name, x:DataType=models:Project}"

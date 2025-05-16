@@ -5,37 +5,64 @@
              xmlns:models="clr-namespace:Sourceworx.DMS.NativeApp.Models"
              xmlns:controls="clr-namespace:Sourceworx.DMS.NativeApp.Pages.Controls"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:f="clr-namespace:Fonts"
              x:Class="Sourceworx.DMS.NativeApp.Pages.ProjectListPage"
              x:DataType="pageModels:ProjectListPageModel"
-             Title="Projects">
+             Title="Case Documents">
 
+    <ContentPage.Resources>
+        <toolkit:IntToBoolConverter x:Key="IntToBoolConverter" />
+    </ContentPage.Resources>
 
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
-                EventName="Appearing"                
+                EventName="Appearing"
                 Command="{Binding AppearingCommand}" />
     </ContentPage.Behaviors>
     <Grid>
-        <VerticalStackLayout 
-            BindableLayout.ItemsSource="{Binding Projects}" 
-            Margin="{StaticResource LayoutPadding}" 
-            Spacing="{StaticResource LayoutSpacing}">
-            <BindableLayout.ItemTemplate>
-                <DataTemplate x:DataType="models:Project">
-                    <Border>
-                        <VerticalStackLayout Padding="10">
-                            <Label Text="{Binding Name}" FontSize="24" />
-                            <Label Text="{Binding Description}" />
-                        </VerticalStackLayout>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding NavigateToProjectCommand, Source={RelativeSource AncestorType={x:Type pageModels:ProjectListPageModel}}, x:DataType=pageModels:ProjectListPageModel}" CommandParameter="{Binding .}"/>
-                        </Border.GestureRecognizers>
-                    </Border>
-                </DataTemplate>
-            </BindableLayout.ItemTemplate>
-        </VerticalStackLayout>
+        <ScrollView>
+            <VerticalStackLayout
+                BindableLayout.ItemsSource="{Binding Projects}"
+                Margin="{StaticResource LayoutPadding}"
+                Spacing="{StaticResource LayoutSpacing}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="models:Project">
+                        <Border Style="{StaticResource TaskCardStyle}" BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}">
+                            <VerticalStackLayout Spacing="10" Padding="10">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="{Binding Name, StringFormat='CASE-{0}'}" FontAttributes="Bold" FontSize="18" />
+                                    <Border Grid.Column="1" BackgroundColor="#FF4444" Padding="8,3" StrokeThickness="0" IsVisible="{Binding CategoryID, Converter={StaticResource IntToBoolConverter}, ConverterParameter=1}">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="5" />
+                                        </Border.StrokeShape>
+                                        <Label Text="Urgent" TextColor="White" FontSize="12" />
+                                    </Border>
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                    <Label Grid.Column="0"
+                                           Text="{x:Static f:FluentUI.building_16_regular}"
+                                           FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                           FontSize="16"
+                                           VerticalOptions="Center" />
+                                    <Label Grid.Column="1"
+                                           Text="{Binding Description}"
+                                           VerticalOptions="Center" />
+                                </Grid>
+                                <Button Text="View Case"
+                                        BackgroundColor="#4285F4"
+                                        TextColor="White"
+                                        CornerRadius="10"
+                                        Margin="0,10,0,0"
+                                        Command="{Binding NavigateToProjectCommand, Source={RelativeSource AncestorType={x:Type pageModels:ProjectListPageModel}}, x:DataType=pageModels:ProjectListPageModel}"
+                                        CommandParameter="{Binding .}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </ScrollView>
 
-        <controls:AddButton 
+        <controls:AddButton
             Command="{Binding AddProjectCommand}" />
     </Grid>
 </ContentPage>

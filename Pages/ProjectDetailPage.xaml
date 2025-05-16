@@ -7,7 +7,7 @@
              xmlns:controls="clr-namespace:Sourceworx.DMS.NativeApp.Pages.Controls"
              x:Class="Sourceworx.DMS.NativeApp.Pages.ProjectDetailPage"
              x:DataType="pageModels:ProjectDetailPageModel"
-             Title="Project">
+             Title="Case Document">
 
 
 
@@ -47,7 +47,7 @@
 
                 <Grid HeightRequest="44">
                     <Label
-                        Text="Tasks"
+                        Text="Documents"
                         Style="{StaticResource Title2}"
                         VerticalOptions="Center"/>
                     <ImageButton
