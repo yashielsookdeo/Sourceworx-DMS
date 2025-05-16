@@ -6,9 +6,11 @@
              xmlns:controls="clr-namespace:Sourceworx.DMS.NativeApp.Pages.Controls"
              xmlns:pullToRefresh="clr-namespace:Syncfusion.Maui.Toolkit.PullToRefresh;assembly=Syncfusion.Maui.Toolkit"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:f="clr-namespace:Fonts"
              x:Class="Sourceworx.DMS.NativeApp.Pages.MainPage"
              x:DataType="pageModels:MainPageModel"
-             Title="{Binding Today}">
+             Title="{Binding Today}"
+             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
 
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
@@ -25,63 +27,286 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <Style x:Key="NotificationBadgeStyle" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="#FF4444" />
+                <Setter Property="WidthRequest" Value="24" />
+                <Setter Property="HeightRequest" Value="24" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Margin" Value="-10,-10,0,0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="IsVisible" Value="True" />
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="12" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="CircleButtonStyle" TargetType="Border">
+                <Setter Property="WidthRequest" Value="70" />
+                <Setter Property="HeightRequest" Value="70" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="35" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="ActionButtonStyle" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="#4285F4" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="Padding" Value="15" />
+                <Setter Property="HeightRequest" Value="120" />
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="20" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="TaskButtonStyle" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="#4285F4" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="Padding" Value="15" />
+                <Setter Property="HeightRequest" Value="80" />
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="20" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="TaskCardStyle" TargetType="Border">
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="Padding" Value="15" />
+                <Setter Property="Margin" Value="0,5,0,5" />
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="20" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid>
+    <Grid BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
         <pullToRefresh:SfPullToRefresh
             IsRefreshing="{Binding IsRefreshing}"
-            RefreshCommand="{Binding RefreshCommand}">
+            RefreshCommand="{Binding RefreshCommand}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
             <pullToRefresh:SfPullToRefresh.PullableContent>
-                <ScrollView>
-                    <VerticalStackLayout Spacing="{StaticResource LayoutSpacing}" Padding="{StaticResource LayoutPadding}">
-                        <controls:CategoryChart />
-                        <Label Text="Case Documents Assigned" Style="{StaticResource Title2}"/>
-                        <VerticalStackLayout
-                            BindableLayout.ItemsSource="{Binding Projects}"
-                            Spacing="{StaticResource LayoutSpacing}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="models:Project">
-                                    <Border Margin="0,5">
-                                        <VerticalStackLayout Padding="15">
-                                            <Grid ColumnDefinitions="Auto,*">
-                                                <Image Grid.Column="0"
-                                                       Source="{Binding Icon}"
-                                                       WidthRequest="40"
-                                                       HeightRequest="40"
-                                                       VerticalOptions="Center"
-                                                       Margin="0,0,15,0"/>
-                                                <VerticalStackLayout Grid.Column="1">
-                                                    <Label Text="{Binding Name}" FontSize="20" FontAttributes="Bold" />
-                                                    <Label Text="{Binding Description}" />
-                                                    <HorizontalStackLayout Spacing="5" Margin="0,5,0,0">
-                                                        <Border BackgroundColor="{Binding Category.DisplayColor}"
-                                                                Padding="5,2"
-                                                                StrokeThickness="0">
-                                                            <Border.StrokeShape>
-                                                                <RoundRectangle CornerRadius="5" />
-                                                            </Border.StrokeShape>
-                                                            <Label Text="{Binding Category.Title}"
-                                                                   TextColor="White"
-                                                                   FontSize="12"/>
-                                                        </Border>
-                                                    </HorizontalStackLayout>
-                                                </VerticalStackLayout>
-                                            </Grid>
-                                        </VerticalStackLayout>
-                                        <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding NavigateToProjectCommand, Source={RelativeSource AncestorType={x:Type pageModels:MainPageModel}}, x:DataType=pageModels:MainPageModel}" CommandParameter="{Binding .}"/>
-                                        </Border.GestureRecognizers>
-                                    </Border>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
+                <ScrollView Margin="0" Padding="0">
+                    <VerticalStackLayout Spacing="{StaticResource LayoutSpacing}" Padding="{StaticResource LayoutPadding}" BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
+
+                        <!-- Welcome Header -->
+                        <VerticalStackLayout Spacing="5" Margin="0,0,0,10">
+                            <Label Text="Welcome back," Style="{StaticResource Title3}" TextColor="{AppThemeBinding Light=#666666, Dark=#AAAAAA}" />
+                            <Label Text="{Binding UserName}" Style="{StaticResource LargeTitle}" TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
+                        </VerticalStackLayout>
+
+                        <!-- Notification Buttons -->
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="15" Margin="0,10,0,20">
+                            <!-- Warning Button -->
+                            <Grid Grid.Column="0" HorizontalOptions="Center">
+                                <Border Style="{StaticResource CircleButtonStyle}" BackgroundColor="#FFC107">
+                                    <Label Text="{x:Static f:FluentUI.alert_16_regular}"
+                                           FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                           FontSize="32"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           TextColor="White" />
+                                </Border>
+                                <Border Style="{StaticResource NotificationBadgeStyle}">
+                                    <Label Text="{Binding WarningCount}"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+                                </Border>
+                            </Grid>
+
+                            <!-- Checkmark Button -->
+                            <Grid Grid.Column="1" HorizontalOptions="Center">
+                                <Border Style="{StaticResource CircleButtonStyle}" BackgroundColor="#4CAF50">
+                                    <Label Text="{x:Static f:FluentUI.checkmark_16_regular}"
+                                           FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                           FontSize="32"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           TextColor="White" />
+                                </Border>
+                                <Border Style="{StaticResource NotificationBadgeStyle}">
+                                    <Label Text="{Binding CompletedTaskCount}"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+                                </Border>
+                            </Grid>
+
+                            <!-- Notification Button -->
+                            <Grid Grid.Column="2" HorizontalOptions="Center">
+                                <Border Style="{StaticResource CircleButtonStyle}" BackgroundColor="#F44336">
+                                    <Label Text="{x:Static f:FluentUI.alert_badge_16_regular}"
+                                           FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                           FontSize="32"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           TextColor="White" />
+                                </Border>
+                                <Border Style="{StaticResource NotificationBadgeStyle}">
+                                    <Label Text="{Binding NotificationCount}"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+                                </Border>
+                            </Grid>
+                        </Grid>
+
+                        <!-- Action Buttons -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="15" Margin="0,10,0,10">
+                            <!-- Manage Profile Button -->
+                            <Border Grid.Column="0" Style="{StaticResource ActionButtonStyle}">
+                                <Grid RowDefinitions="Auto,*">
+                                    <Label Text="Manage Profile"
+                                           TextColor="White"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           Margin="0,0,0,10" />
+                                    <Label Grid.Row="1"
+                                           Text="{x:Static f:FluentUI.person_16_regular}"
+                                           FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                           FontSize="32"
+                                           TextColor="White"
+                                           VerticalOptions="Center" />
+                                </Grid>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ManageProfileCommand}" />
+                                </Border.GestureRecognizers>
+                            </Border>
+
+                            <!-- View Stats Button -->
+                            <Border Grid.Column="1" Style="{StaticResource ActionButtonStyle}">
+                                <Grid RowDefinitions="Auto,*">
+                                    <Label Text="View Stats"
+                                           TextColor="White"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           Margin="0,0,0,10" />
+                                    <Label Grid.Row="1"
+                                           Text="{x:Static f:FluentUI.arrow_trending_20_regular}"
+                                           FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                           FontSize="32"
+                                           TextColor="White"
+                                           VerticalOptions="Center" />
+                                </Grid>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ViewStatsCommand}" />
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </Grid>
+
+                        <!-- My Tasks Button -->
+                        <Border Style="{StaticResource TaskButtonStyle}" Margin="0,10,0,20">
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Label Grid.Column="0"
+                                       Text="{x:Static f:FluentUI.list_24_regular}"
+                                       FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                       FontSize="24"
+                                       TextColor="White"
+                                       VerticalOptions="Center"
+                                       Margin="0,0,15,0" />
+                                <Label Grid.Column="1"
+                                       Text="My Tasks"
+                                       TextColor="White"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       VerticalOptions="Center" />
+                            </Grid>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ViewMyTasksCommand}" />
+                            </Border.GestureRecognizers>
+                        </Border>
+
+                        <!-- New Tasks Section -->
+                        <Label Text="New Tasks" Style="{StaticResource Title2}" Margin="0,10,0,10" />
+
+                        <!-- Task Cards -->
+                        <VerticalStackLayout Spacing="10">
+                            <!-- Task Card 1 -->
+                            <Border Style="{StaticResource TaskCardStyle}" BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}">
+                                <VerticalStackLayout Spacing="10">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Text="CASE-001" FontAttributes="Bold" FontSize="18" />
+                                        <Border Grid.Column="1" BackgroundColor="#FF4444" Padding="8,3" StrokeThickness="0">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="5" />
+                                            </Border.StrokeShape>
+                                            <Label Text="Urgent" TextColor="White" FontSize="12" />
+                                        </Border>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                        <Label Grid.Column="0"
+                                               Text="{x:Static f:FluentUI.building_16_regular}"
+                                               FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                               FontSize="16"
+                                               VerticalOptions="Center" />
+                                        <Label Grid.Column="1"
+                                               Text="Chris Hani Baragwanath Academic Hospital"
+                                               VerticalOptions="Center" />
+                                    </Grid>
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                        <Label Grid.Column="0"
+                                               Text="{x:Static f:FluentUI.flag_16_regular}"
+                                               FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                               FontSize="16"
+                                               VerticalOptions="Center" />
+                                        <Label Grid.Column="1"
+                                               Text="Priority: High"
+                                               VerticalOptions="Center" />
+                                    </Grid>
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                        <Label Grid.Column="0"
+                                               Text="{x:Static f:FluentUI.calendar_ltr_16_regular}"
+                                               FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                               FontSize="16"
+                                               VerticalOptions="Center" />
+                                        <Label Grid.Column="1"
+                                               Text="Due: 2025-04-15"
+                                               VerticalOptions="Center" />
+                                    </Grid>
+                                    <Button Text="Accept Task"
+                                            BackgroundColor="#4285F4"
+                                            TextColor="White"
+                                            CornerRadius="10"
+                                            Margin="0,10,0,0"
+                                            Command="{Binding AcceptTaskCommand}" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- Task Card 2 -->
+                            <Border Style="{StaticResource TaskCardStyle}" BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}">
+                                <VerticalStackLayout Spacing="10">
+                                    <Label Text="CASE-002" FontAttributes="Bold" FontSize="18" />
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                        <Label Grid.Column="0"
+                                               Text="{x:Static f:FluentUI.building_16_regular}"
+                                               FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                               FontSize="16"
+                                               VerticalOptions="Center" />
+                                        <Label Grid.Column="1"
+                                               Text="Charlotte Maxeke Hospital"
+                                               VerticalOptions="Center" />
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Border>
                         </VerticalStackLayout>
 
                     </VerticalStackLayout>
                 </ScrollView>
             </pullToRefresh:SfPullToRefresh.PullableContent>
         </pullToRefresh:SfPullToRefresh>
-
-
     </Grid>
 </ContentPage>
