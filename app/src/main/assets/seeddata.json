@@ -1,0 +1,414 @@
+{
+  "Projects": [
+    {
+      "Name": "CASE # 20250913/0045",
+      "Description": "Medical malpractice case involving surgical complications at City Hospital. Patient experienced post-operative complications requiring additional treatment.",
+      "Icon": "📋",
+      "Category": {
+        "Title": "Allocated",
+        "Color": "#3068DF"
+      },
+      "Tags": [
+        {
+          "Title": "Medical",
+          "Color": "#3068DF"
+        },
+        {
+          "Title": "High Priority",
+          "Color": "#FF4500"
+        }
+      ],
+      "Tasks": [
+        {
+          "Title": "Summons",
+          "IsCompleted": true
+        },
+        {
+          "Title": "Medical Records",
+          "IsCompleted": true
+        },
+        {
+          "Title": "Letter of Demands",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Adverse Event",
+          "IsCompleted": false
+        },
+        {
+          "Title": "PAIA",
+          "IsCompleted": false
+        }
+      ]
+    },
+    {
+      "Name": "CASE # 20240901/7895",
+      "Description": "Personal injury case resulting from workplace accident at Construction Site. Client suffered back injuries requiring extensive rehabilitation.",
+      "Icon": "🏥",
+      "Category": {
+        "Title": "Scanned",
+        "Color": "#8800FF"
+      },
+      "Tags": [
+        {
+          "Title": "Personal Injury",
+          "Color": "#FF4500"
+        },
+        {
+          "Title": "Workplace",
+          "Color": "#FFA500"
+        }
+      ],
+      "Tasks": [
+        {
+          "Title": "Summons",
+          "IsCompleted": true
+        },
+        {
+          "Title": "Medical Records",
+          "IsCompleted": true
+        },
+        {
+          "Title": "Letter of Demands",
+          "IsCompleted": true
+        },
+        {
+          "Title": "Adverse Event",
+          "IsCompleted": false
+        },
+        {
+          "Title": "PAIA",
+          "IsCompleted": false
+        }
+      ]
+    },
+    {
+      "Name": "CASE # 20260913/3895",
+      "Description": "Insurance claim dispute for denied healthcare coverage. Client was denied coverage for necessary medical procedure despite policy coverage.",
+      "Icon": "⚠️",
+      "Category": {
+        "Title": "Outstanding",
+        "Color": "#FF3300"
+      },
+      "Tags": [
+        {
+          "Title": "Insurance",
+          "Color": "#32CD32"
+        },
+        {
+          "Title": "Urgent",
+          "Color": "#FF0000"
+        }
+      ],
+      "Tasks": [
+        {
+          "Title": "Summons",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Medical Records",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Letter of Demands",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Adverse Event",
+          "IsCompleted": false
+        },
+        {
+          "Title": "PAIA",
+          "IsCompleted": false
+        }
+      ]
+    },
+    {
+      "Name": "CASE # 20260215/4532",
+      "Description": "Family law case involving custody dispute and property division. Requires immediate attention due to upcoming court date.",
+      "Icon": "🔍",
+      "Category": {
+        "Title": "Scanned Documents",
+        "Color": "#FF9900"
+      },
+      "Tags": [
+        {
+          "Title": "Family Law",
+          "Color": "#1E90FF"
+        },
+        {
+          "Title": "Custody",
+          "Color": "#FF69B4"
+        }
+      ],
+      "Tasks": [
+        {
+          "Title": "Court Documents",
+          "IsCompleted": true
+        },
+        {
+          "Title": "Financial Records",
+          "IsCompleted": true
+        },
+        {
+          "Title": "Custody Agreement",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Property Valuation",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Mediation Records",
+          "IsCompleted": false
+        }
+      ]
+    },
+    {
+      "Name": "CASE # 20250405/1122",
+      "Description": "Corporate contract dispute between two technology companies. Involves intellectual property rights and breach of contract claims.",
+      "Icon": "📄",
+      "Category": {
+        "Title": "Allocated",
+        "Color": "#3068DF"
+      },
+      "Tags": [
+        {
+          "Title": "Corporate",
+          "Color": "#4B0082"
+        },
+        {
+          "Title": "Contract",
+          "Color": "#008080"
+        }
+      ],
+      "Tasks": [
+        {
+          "Title": "Contract Review",
+          "IsCompleted": true
+        },
+        {
+          "Title": "IP Documentation",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Correspondence",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Financial Analysis",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Settlement Proposal",
+          "IsCompleted": false
+        }
+      ]
+    },
+    {
+      "Name": "CASE # 20250708/3344",
+      "Description": "Environmental law case against manufacturing company for alleged pollution violations affecting local water supply.",
+      "Icon": "🌊",
+      "Category": {
+        "Title": "Outstanding",
+        "Color": "#FF3300"
+      },
+      "Tags": [
+        {
+          "Title": "Environmental",
+          "Color": "#006400"
+        },
+        {
+          "Title": "Class Action",
+          "Color": "#8B4513"
+        }
+      ],
+      "Tasks": [
+        {
+          "Title": "Environmental Reports",
+          "IsCompleted": true
+        },
+        {
+          "Title": "Witness Statements",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Regulatory Filings",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Expert Testimony",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Community Impact Study",
+          "IsCompleted": false
+        }
+      ]
+    },
+    {
+      "Name": "CASE # 20241120/5566",
+      "Description": "Real estate transaction dispute involving property defects not disclosed during sale. Buyer seeking damages for repair costs.",
+      "Icon": "🏠",
+      "Category": {
+        "Title": "Scanned",
+        "Color": "#8800FF"
+      },
+      "Tags": [
+        {
+          "Title": "Real Estate",
+          "Color": "#A0522D"
+        },
+        {
+          "Title": "Property",
+          "Color": "#DAA520"
+        }
+      ],
+      "Tasks": [
+        {
+          "Title": "Property Documents",
+          "IsCompleted": true
+        },
+        {
+          "Title": "Inspection Reports",
+          "IsCompleted": true
+        },
+        {
+          "Title": "Disclosure Forms",
+          "IsCompleted": true
+        },
+        {
+          "Title": "Repair Estimates",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Settlement Negotiation",
+          "IsCompleted": false
+        }
+      ]
+    },
+    {
+      "Name": "CASE # 20260102/7788",
+      "Description": "Employment discrimination case alleging wrongful termination based on protected status. Client seeking reinstatement and damages.",
+      "Icon": "👔",
+      "Category": {
+        "Title": "Scanned Documents",
+        "Color": "#FF9900"
+      },
+      "Tags": [
+        {
+          "Title": "Employment",
+          "Color": "#4682B4"
+        },
+        {
+          "Title": "Discrimination",
+          "Color": "#9932CC"
+        }
+      ],
+      "Tasks": [
+        {
+          "Title": "Employment Records",
+          "IsCompleted": true
+        },
+        {
+          "Title": "Performance Reviews",
+          "IsCompleted": true
+        },
+        {
+          "Title": "HR Complaints",
+          "IsCompleted": true
+        },
+        {
+          "Title": "Witness Statements",
+          "IsCompleted": false
+        },
+        {
+          "Title": "EEOC Filing",
+          "IsCompleted": false
+        }
+      ]
+    },
+    {
+      "Name": "CASE # 20250630/9900",
+      "Description": "Intellectual property infringement case involving patent dispute between technology companies. High-value case with significant damages claimed.",
+      "Icon": "💡",
+      "Category": {
+        "Title": "Allocated",
+        "Color": "#3068DF"
+      },
+      "Tags": [
+        {
+          "Title": "Intellectual Property",
+          "Color": "#800080"
+        },
+        {
+          "Title": "Patent",
+          "Color": "#483D8B"
+        }
+      ],
+      "Tasks": [
+        {
+          "Title": "Patent Documentation",
+          "IsCompleted": true
+        },
+        {
+          "Title": "Prior Art Search",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Expert Analysis",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Damages Calculation",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Settlement Discussion",
+          "IsCompleted": false
+        }
+      ]
+    },
+    {
+      "Name": "CASE # 20260825/1234",
+      "Description": "Product liability case involving defective consumer electronics that caused property damage. Multiple plaintiffs with similar claims.",
+      "Icon": "⚠️",
+      "Category": {
+        "Title": "Outstanding",
+        "Color": "#FF3300"
+      },
+      "Tags": [
+        {
+          "Title": "Product Liability",
+          "Color": "#B22222"
+        },
+        {
+          "Title": "Consumer",
+          "Color": "#FF8C00"
+        }
+      ],
+      "Tasks": [
+        {
+          "Title": "Product Specifications",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Incident Reports",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Expert Testing",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Damage Assessment",
+          "IsCompleted": false
+        },
+        {
+          "Title": "Recall Information",
+          "IsCompleted": false
+        }
+      ]
+    }
+  ]
+}
