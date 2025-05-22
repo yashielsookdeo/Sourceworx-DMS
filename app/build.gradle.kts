@@ -7,21 +7,31 @@ plugins {
 
 android {
     namespace = "com.skyner.sourceworxdms"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.skyner.sourceworxdms"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("../keystore/surescan.keystore")
+            storePassword = "surescan123"
+            keyAlias = "surescan"
+            keyPassword = "surescan123"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
