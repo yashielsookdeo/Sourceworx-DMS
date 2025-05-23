@@ -142,78 +142,33 @@ fun DocumentScannerScreen(
                     }
                 }
 
-                ScanningState.SCANNING -> {
-                    // Camera preview with document frame
-                    Box(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        // Mock camera preview (in a real app, this would be a CameraPreview)
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.Black)
-                        )
-
+                 ScanningState.SCANNING -> {
                         // Document frame overlay
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth(0.9f)
                                 .aspectRatio(0.7f) // A4 paper aspect ratio
-                                .align(Alignment.Center)
+                                .align(Alignment.BottomCenter)
                                 .border(
                                     width = 2.dp,
                                     color = Color.White,
                                     shape = RoundedCornerShape(8.dp)
                                 )
                         )
-
-                        // Capture button
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .padding(bottom = 32.dp)
-                        ) {
-                            IconButton(
-                                onClick = { captureDocument() },
-                                modifier = Modifier
-                                    .size(72.dp)
-                                    .clip(CircleShape)
-                                    .background(Color.White)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Camera,
-                                    contentDescription = "Capture",
-                                    tint = Primary,
-                                    modifier = Modifier.size(36.dp)
-                                )
-                            }
-                        }
-
-                        // Instructions overlay
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                                .align(Alignment.TopCenter)
-                        ) {
-                            Text(
-                                text = "Position document within frame",
-                                style = MaterialTheme.typography.bodyLarge.copy(
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Medium
-                                ),
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .background(
-                                        color = Color.Black.copy(alpha = 0.5f),
-                                        shape = RoundedCornerShape(8.dp)
-                                    )
-                                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                        {
+                            // WebView instead of mock camera preview
+                            AndroidView(
+                                factory = { context ->
+                                    WebView(context).apply {
+                                        webViewClient = WebViewClient()
+                                        settings.javaScriptEnabled = true
+                                        loadUrl("https://github.com/Dynamsoft/mobile-web-capture/tree/master/samples")
+                                    }
+                                },
+                                modifier = Modifier.fillMaxSize()
                             )
                         }
-                    }
                 }
-
                 ScanningState.PROCESSING -> {
                     // Processing screen with progress indicator
                     Column(
