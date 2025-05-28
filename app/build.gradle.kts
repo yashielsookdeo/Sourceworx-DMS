@@ -21,10 +21,11 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("../keystore/surescan.keystore")
-            storePassword = "surescan123"
-            keyAlias = "surescan"
-            keyPassword = "surescan123"
+            // Use environment variables for CI/CD, fallback to local values for development
+            storeFile = file("../keystore/release.keystore")
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "surescan123"
+            keyAlias = System.getenv("KEY_ALIAS") ?: "surescan"
+            keyPassword = System.getenv("KEY_PASSWORD") ?: "surescan123"
         }
     }
 
@@ -39,11 +40,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true

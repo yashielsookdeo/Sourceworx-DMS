@@ -1,0 +1,215 @@
+name: 🚀 Build and Release APK
+
+on:
+  # Trigger on new tags (semantic versioning)
+  push:
+    tags:
+      - 'v*.*.*'
+  
+  # Trigger on GitHub release creation
+  release:
+    types: [created]
+  
+  # Manual trigger for testing
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 1.0.0)'
+        required: true
+        default: '1.0.0'
+      create_release:
+        description: 'Create GitHub release'
+        required: true
+        default: true
+        type: boolean
+
+env:
+  # Android build configuration
+  JAVA_VERSION: '17'
+  ANDROID_COMPILE_SDK: '34'
+  ANDROID_BUILD_TOOLS: '34.0.0'
+  ANDROID_SDK_TOOLS: '9477386'
+
+jobs:
+  test:
+    name: 🧪 Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: ☕ Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+
+      - name: 📱 Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 🐘 Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-home-cache-cleanup: true
+
+      - name: 🔧 Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: 🧪 Run Unit Tests
+        run: ./gradlew testDebugUnitTest
+
+      - name: 📊 Upload Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: app/build/reports/tests/
+
+  build:
+    name: 🔨 Build Release APK
+    runs-on: ubuntu-latest
+    needs: test
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      apk-path: ${{ steps.build.outputs.apk-path }}
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: ☕ Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+
+      - name: 📱 Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 🐘 Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-home-cache-cleanup: true
+
+      - name: 🔧 Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: 🏷️ Get Version
+        id: version
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+          else
+            VERSION="1.0.0"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: 🔐 Decode Keystore
+        env:
+          ENCODED_STRING: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          mkdir -p keystore
+          echo $ENCODED_STRING | base64 -di > keystore/release.keystore
+
+      - name: 🔨 Build Release APK
+        id: build
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          ./gradlew assembleRelease
+          APK_PATH=$(find app/build/outputs/apk/release -name "*.apk" | head -1)
+          echo "apk-path=$APK_PATH" >> $GITHUB_OUTPUT
+          echo "Built APK: $APK_PATH"
+
+      - name: 📦 Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sourceworx-dms-v${{ steps.version.outputs.version }}-release
+          path: ${{ steps.build.outputs.apk-path }}
+
+  release:
+    name: 🚀 Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && github.event.inputs.create_release == 'true')
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📦 Download APK Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: sourceworx-dms-v${{ needs.build.outputs.version }}-release
+          path: ./release-artifacts
+
+      - name: 📝 Generate Release Notes
+        id: release_notes
+        run: |
+          echo "## 🎉 Sourceworx-DMS v${{ needs.build.outputs.version }}" > release_notes.md
+          echo "" >> release_notes.md
+          echo "### 📱 What's New" >> release_notes.md
+          echo "" >> release_notes.md
+          
+          # Get commits since last tag
+          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -n "$LAST_TAG" ]; then
+            echo "**Changes since $LAST_TAG:**" >> release_notes.md
+            git log --pretty=format:"- %s" $LAST_TAG..HEAD >> release_notes.md
+          else
+            echo "- Initial release with camera functionality" >> release_notes.md
+            echo "- Real document scanning with CameraX" >> release_notes.md
+            echo "- Complete scan workflow implementation" >> release_notes.md
+          fi
+          
+          echo "" >> release_notes.md
+          echo "### 📋 Installation" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "1. Download the APK file below" >> release_notes.md
+          echo "2. Enable 'Install from Unknown Sources' in Android settings" >> release_notes.md
+          echo "3. Install the APK on your Android device" >> release_notes.md
+          echo "4. Grant camera permissions when prompted" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### 🔧 Requirements" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "- Android 7.0 (API level 24) or higher" >> release_notes.md
+          echo "- Camera permission for document scanning" >> release_notes.md
+          echo "- Storage permission for saving documents" >> release_notes.md
+
+      - name: 🚀 Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ needs.build.outputs.version }}
+          name: Sourceworx-DMS v${{ needs.build.outputs.version }}
+          body_path: release_notes.md
+          files: |
+            ./release-artifacts/*.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  notify:
+    name: 📢 Notify Success
+    runs-on: ubuntu-latest
+    needs: [build, release]
+    if: always() && needs.build.result == 'success'
+    
+    steps:
+      - name: 🎉 Success Notification
+        run: |
+          echo "✅ Sourceworx-DMS v${{ needs.build.outputs.version }} built successfully!"
+          echo "📦 APK Size: $(du -h ${{ needs.build.outputs.apk-path }} | cut -f1)"
+          echo "🔗 Release URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ needs.build.outputs.version }}"
