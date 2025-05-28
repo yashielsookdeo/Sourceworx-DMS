@@ -1,12 +1,21 @@
 package com.skyner.sourceworxdms.ui.screens.scan
 
-import android.app.Application
-import androidx.compose.animation.AnimatedVisibility
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview as CameraPreviewUseCase
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -22,15 +31,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import coil.compose.AsyncImage
 import com.skyner.sourceworxdms.ui.components.*
 import com.skyner.sourceworxdms.ui.theme.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 enum class ScanningState {
     READY, // Ready to scan
@@ -48,37 +66,99 @@ fun DocumentScannerScreen(
     onBackClick: () -> Unit,
     onScanComplete: () -> Unit
 ) {
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val coroutineScope = rememberCoroutineScope()
+
     var scanningState by remember { mutableStateOf(ScanningState.READY) }
-    var capturedImageUri by remember { mutableStateOf<String?>(null) }
+    var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
     var processingProgress by remember { mutableStateOf(0f) }
+    var hasCameraPermission by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+        )
+    }
+
     val animatedProgress by animateFloatAsState(
         targetValue = processingProgress,
         animationSpec = tween(durationMillis = 1500, easing = LinearEasing),
         label = "Processing Progress"
     )
-    val coroutineScope = rememberCoroutineScope()
 
-    // Mock function to simulate document scanning
-    fun captureDocument() {
-        scanningState = ScanningState.PROCESSING
-        coroutineScope.launch {
-            // Simulate processing time
-            for (i in 1..10) {
-                processingProgress = i / 10f
-                delay(300) // Simulate processing delay
-            }
-            // Set mock captured image (in a real app, this would be a URI to the captured image)
-            capturedImageUri = "captured_document"
-            scanningState = ScanningState.REVIEW
+    // Camera permission launcher
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        hasCameraPermission = isGranted
+        if (isGranted) {
+            scanningState = ScanningState.SCANNING
         }
+    }
+
+    // Camera executor
+    val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
+
+    // Image capture use case
+    var imageCapture: ImageCapture? by remember { mutableStateOf(null) }
+
+    // Function to capture document
+    fun captureDocument() {
+        val imageCapture = imageCapture ?: return
+
+        // Create output file
+        val outputDirectory = File(context.filesDir, "scanned_documents")
+        if (!outputDirectory.exists()) {
+            outputDirectory.mkdirs()
+        }
+
+        val photoFile = File(
+            outputDirectory,
+            SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US).format(System.currentTimeMillis()) + ".jpg"
+        )
+
+        val outputFileOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+
+        scanningState = ScanningState.PROCESSING
+
+        imageCapture.takePicture(
+            outputFileOptions,
+            ContextCompat.getMainExecutor(context),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onError(exception: ImageCaptureException) {
+                    Log.e("DocumentScanner", "Photo capture failed: ${exception.message}", exception)
+                    scanningState = ScanningState.SCANNING
+                }
+
+                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    capturedImageUri = Uri.fromFile(photoFile)
+                    coroutineScope.launch {
+                        // Simulate processing time
+                        for (i in 1..10) {
+                            processingProgress = i / 10f
+                            delay(200)
+                        }
+                        scanningState = ScanningState.REVIEW
+                    }
+                }
+            }
+        )
     }
 
     // Function to complete the scanning process
     fun completeScan() {
         scanningState = ScanningState.COMPLETE
         coroutineScope.launch {
-            delay(1000) // Show completion message briefly
+            delay(1000)
             onScanComplete()
+        }
+    }
+
+    // Function to start scanning
+    fun startScanning() {
+        if (hasCameraPermission) {
+            scanningState = ScanningState.SCANNING
+        } else {
+            cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
 
@@ -137,7 +217,7 @@ fun DocumentScannerScreen(
 
                         SourceworxPrimaryButton(
                             text = "Start Scanning",
-                            onClick = { scanningState = ScanningState.SCANNING }
+                            onClick = { startScanning() }
                         )
                     }
                 }
@@ -147,11 +227,12 @@ fun DocumentScannerScreen(
                     Box(
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        // Mock camera preview (in a real app, this would be a CameraPreview)
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.Black)
+                        // Real camera preview
+                        CameraPreview(
+                            modifier = Modifier.fillMaxSize(),
+                            onImageCaptureReady = { capture ->
+                                imageCapture = capture
+                            }
                         )
 
                         // Document frame overlay
@@ -281,7 +362,7 @@ fun DocumentScannerScreen(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // Document preview (mock)
+                        // Document preview (real captured image)
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -290,32 +371,43 @@ fun DocumentScannerScreen(
                                 .background(Color.LightGray)
                                 .padding(1.dp)
                         ) {
-                            // In a real app, this would be an Image composable with the captured document
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(Color.White)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Description,
-                                    contentDescription = null,
-                                    tint = TextSecondary.copy(alpha = 0.3f),
+                            if (capturedImageUri != null) {
+                                AsyncImage(
+                                    model = capturedImageUri,
+                                    contentDescription = "Captured Document",
                                     modifier = Modifier
-                                        .size(120.dp)
-                                        .align(Alignment.Center)
+                                        .fillMaxSize()
+                                        .clip(RoundedCornerShape(8.dp)),
+                                    contentScale = ContentScale.Crop
                                 )
+                            } else {
+                                // Fallback if image is not available
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(Color.White)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Description,
+                                        contentDescription = null,
+                                        tint = TextSecondary.copy(alpha = 0.3f),
+                                        modifier = Modifier
+                                            .size(120.dp)
+                                            .align(Alignment.Center)
+                                    )
 
-                                Text(
-                                    text = "Document Preview",
-                                    style = MaterialTheme.typography.bodyLarge.copy(
-                                        color = TextSecondary,
-                                        textAlign = TextAlign.Center
-                                    ),
-                                    modifier = Modifier
-                                        .align(Alignment.BottomCenter)
-                                        .padding(bottom = 16.dp)
-                                )
+                                    Text(
+                                        text = "Document Preview",
+                                        style = MaterialTheme.typography.bodyLarge.copy(
+                                            color = TextSecondary,
+                                            textAlign = TextAlign.Center
+                                        ),
+                                        modifier = Modifier
+                                            .align(Alignment.BottomCenter)
+                                            .padding(bottom = 16.dp)
+                                    )
+                                }
                             }
                         }
 
@@ -475,6 +567,62 @@ fun DocumentScannerScreen(
             }
         }
     }
+}
+
+@Composable
+fun CameraPreview(
+    modifier: Modifier = Modifier,
+    onImageCaptureReady: (ImageCapture) -> Unit
+) {
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    AndroidView(
+        factory = { ctx ->
+            val previewView = PreviewView(ctx)
+            val cameraProviderFuture = ProcessCameraProvider.getInstance(ctx)
+
+            cameraProviderFuture.addListener({
+                val cameraProvider = cameraProviderFuture.get()
+
+                // Preview use case
+                val preview = CameraPreviewUseCase.Builder().build().also {
+                    it.setSurfaceProvider(previewView.surfaceProvider)
+                }
+
+                // Image capture use case
+                val imageCapture = ImageCapture.Builder()
+                    .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
+                    .build()
+
+                // Camera selector (back camera)
+                val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+                try {
+                    // Unbind use cases before rebinding
+                    cameraProvider.unbindAll()
+
+                    // Bind use cases to camera
+                    cameraProvider.bindToLifecycle(
+                        lifecycleOwner,
+                        cameraSelector,
+                        preview,
+                        imageCapture
+                    )
+
+                    // Notify that image capture is ready
+                    onImageCaptureReady(imageCapture)
+
+                } catch (exc: Exception) {
+                    Log.e("CameraPreview", "Use case binding failed", exc)
+                }
+
+            }, ContextCompat.getMainExecutor(ctx))
+
+            previewView
+        },
+        modifier = modifier
+    )
 }
 
 @Preview(showBackground = true)
